@@ -58,7 +58,6 @@ setup_iptables()
 
   # test if legacy required (>= Buster)
   if [ "${IPTABLES_LEGACY:-false}" = 'true' ] && [ ! -z "$(command -v iptables-legacy)" ]; then 
-    echo "+++ INFO $0 $$ -- update-alternatives for iptables to legacy"
     update-alternatives --set iptables /usr/sbin/iptables-legacy
     update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
     update-alternatives --set arptables /usr/sbin/arptables-legacy
@@ -124,9 +123,9 @@ setup_dnsmasq()
   local minor=${version#*.}
 
   if [ ${major:-0} -ge 2 ] && [ ${minor} -ge 77 ]; then
-    echo "DNSMASQ; version; ${version}" &> /dev/stderr
+    echo "--- INFO $0 $$ -- DNSMASQ version: ${version}" &> /dev/stderr
   else
-    echo "DNSMASQ; version; ${version}; removing dns-root-data" &> /dev/stderr
+    echo "+++ WARN $0 $$ -- DNSMASQ version: ${version}; removing dns-root-data" &> /dev/stderr
     apt -qq -y --purge remove dns-root-data
   fi
 
@@ -171,11 +170,10 @@ setup_bridge()
   local dns_nameservers="${*:-${DNS_NAMESERVERS}}"
 
   if [ $(brctl show | egrep "${bridge}" | wc -l) -le 1 ]; then
-    echo "+++ INFO $0 $$ -- building bridge ${bridge} to eth0" &> /dev/stderr
     brctl addbr ${bridge}
     #brctl addif ${bridge} eth0
   else
-    echo "+++ INFO $0 $$ -- existing bridge ${bridge}; not making" &> /dev/stderr
+    echo "+++ WARN $0 $$ -- existing bridge ${bridge}; not making" &> /dev/stderr
   fi
 
   if [ -s ${NETWORK_CONF} ]; then
@@ -276,7 +274,6 @@ setup_device()
       result='{"date":"'$(date -u +%FT%TZ)'","interface":"'${interface}'","bridge":'"${bridge}"'}'
 
       if [ ! -z "$(command -v dnsmasq)" ]; then
-        echo "+++ INFO $0 $$ -- stopping and disabling dnsmasq and dhcpcd" &> /dev/stderr
         systemctl stop dhcpcd &> /dev/stderr
         systemctl disable dhcpcd &> /dev/stderr
         systemctl stop dnsmasq &> /dev/stderr
@@ -374,8 +371,6 @@ rpi_bridge()
   local bridge=${1:-null}
   local interface=${2:-wlan0}
 
-  echo "+++ INFO $0 $$ -- installing; bridge: ${bridge}" &> /dev/stderr
-
   if [ "$(required_packages ${bridge})" = 'true' ]; then
     # turn off
     if [ ! -z "$(command -v dnsmasq)" ]; then systemctl stop dnsmasq &> /dev/stderr; fi
@@ -403,23 +398,29 @@ rpi_bridge()
 }
 
 ###
-### defaults
+### MAIN
 ###
 
-## generated
+# doc
+echo "USAGE: ${0} [ br0 ]" &> /dev/stderr
+
+# root?
+if [ $(whoami) != "root" ]; then echo "*** ERROR $0 $$ -- run as root" &> /dev/stderr; exit 1; fi
+
+# generated
 HOST_IPADDR=$(hostname -I | awk '{ print $1 }')
 HOSTIP=${HOST_IPADDR##*.}
 
-## dynamic
+# dynamic
 SSID=${SSID:-TEST}
 WPA_PASSPHRASE=${WPA_PASSPHRASE:-0123456789}
 DNS_NAMESERVERS="${DNS_NAMESERVERS:-9.9.9.9 1.1.1.1}"
 CHANNEL=${CHANNEL:-8}
-
-## only G on Model3b+
 HW_MODE=${HW_MODE:-g}
 
-## dhcp
+echo "SSID: ${SSID}, WPA_PASSPHRASE: ${WPA_PASSPHRASE}, CHANNEL: ${CHANNEL}, HW_MODE: ${HW_MODE}; DNS_NAMESERVERS: ${DNS_NAMESERVERS}" &> /dev/stderr
+
+# dhcp
 DHCP_DNS=${DHCP_DNS:-${DNS_NAMESERVERS}}
 DHCP_IPADDR=${DHCP_IPADDR:-192.168.${HOSTIP}.1}
 DHCP_ROUTER=${DHCP_ROUTER:-${DHCP_IPADDR}}
@@ -429,7 +430,7 @@ DHCP_NETMASK=${DHCP_NETMASK:-255.255.255.0}
 DHCP_NETSIZE=${DHCP_NETSIZE:-24}
 DHCP_DURATION=${DHCP_DURATION:-24h}
 
-## static
+# static
 SYSCTL_CONF="/etc/sysctl.conf"
 NETWORK_CONF="/etc/network/interfaces"
 DHCP_CONF="/etc/dhcpcd.conf"
@@ -438,18 +439,6 @@ HOSTAPD_CONF="/etc/hostapd/hostapd.conf"
 HOSTAPD_DEFAULT="/etc/default/hostapd"
 IPTABLES_SCRIPT="/etc/iptables.sh"
 IPTABLES_SERVICE="/etc/systemd/system/iptables.service"
-
-###
-### MAIN
-###
-
-
-# doc
-echo "USAGE: ${0} [ br0 ]" &> /dev/stderr
-echo "OPTIONS: bridge optional; environment: SSID: ${SSID}, WPA_PASSPHRASE: ${WPA_PASSPHRASE}, CHANNEL: ${CHANNEL}, DNS_NAMESERVERS: ${DNS_NAMESERVERS}" &> /dev/stderr
-
-# root?
-if [ $(whoami) != "root" ]; then echo "*** ERROR $0 $$ -- run as root" &> /dev/stderr; exit 1; fi
 
 # doit
 rpi_bridge ${*} | jq '.'

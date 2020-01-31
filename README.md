@@ -55,9 +55,8 @@ If the script successfully executes it outputs a JSON structure with the configu
 
 ```
 USAGE: ./sh/rpi-bridge.sh [ br0 ]
-OPTIONS: bridge optional; environment: SSID: TEST, WPA_PASSPHRASE: 0123456789, CHANNEL: 8, DNS_NAMESERVERS: 9.9.9.9 1.1.1.1
-+++ INFO ./sh/rpi-bridge.sh 23538 -- installing; bridge: null
-DNSMASQ; version; 2.80
+SSID: TEST, WPA_PASSPHRASE: 0123456789, CHANNEL: 8, HW_MODE: g; DNS_NAMESERVERS: 9.9.9.9 1.1.1.1
+--- INFO ./sh/rpi-bridge.sh 27414 -- DNSMASQ version: 2.80
 Synchronizing state of dnsmasq.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable dnsmasq
 Synchronizing state of dhcpcd.service with SysV service script with /lib/systemd/systemd-sysv-install.
@@ -65,7 +64,7 @@ Executing: /lib/systemd/systemd-sysv-install enable dhcpcd
 Synchronizing state of hostapd.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable hostapd
 {
-  "date": "2020-01-31T17:43:19Z",
+  "date": "2020-01-31T17:52:35Z",
   "interface": "wlan0",
   "dnsmasq": {
     "version": "2.80",
