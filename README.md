@@ -2,7 +2,7 @@
 
 This [repository][repository] contains documentation and scripts to setup a RaspberryPi as a WiFi access point.
 
-# 1. [Status][status-md]
+# 1. Status
 
 [arm64-shield]: https://img.shields.io/badge/aarch64-no-red.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-no-red.svg
@@ -61,8 +61,7 @@ sudo reboot
 
 #  Further Information 
 
-See [`SERVICE.md`][service-md] and [`PATTERN.md`][pattern-md] for more information on building services and patterns.
-Refer to the following for more information on [getting started][edge-fabric] and [installation][edge-install].
+See [`HASSIO.md`](doc/HASSIO.md) for information on installing [Home Assistant](http://home-assistant.io)
 
 # Changelog & Releases
 
