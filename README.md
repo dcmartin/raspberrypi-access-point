@@ -53,6 +53,52 @@ sudo ./sh/rpi-bridge
 
 If the script successfully executes it outputs a JSON structure with the configuration applied; record that information for review.
 
+```
+USAGE: ./sh/rpi-bridge.sh [ br0 ]
+OPTIONS: bridge optional; environment: SSID: TEST, WPA_PASSPHRASE: 0123456789, CHANNEL: 8, DNS_NAMESERVERS: 9.9.9.9 1.1.1.1
++++ INFO ./sh/rpi-bridge.sh 23538 -- installing; bridge: null
+DNSMASQ; version; 2.80
+Synchronizing state of dnsmasq.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable dnsmasq
+Synchronizing state of dhcpcd.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable dhcpcd
+Synchronizing state of hostapd.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable hostapd
+{
+  "date": "2020-01-31T17:43:19Z",
+  "interface": "wlan0",
+  "dnsmasq": {
+    "version": "2.80",
+    "dhcp": {
+      "ip": "192.168.93.1",
+      "netsize": 24,
+      "netmask": "255.255.255.0",
+      "start": "192.168.93.2",
+      "finish": "192.168.93.254",
+      "duration": "24h"
+    },
+    "options": [
+      "bind-dynamic",
+      "domain-needed",
+      "bogus-priv"
+    ]
+  },
+  "iptables": {
+    "script": "/etc/iptables.sh",
+    "service": "/etc/systemd/system/iptables.service"
+  },
+  "hostapd": {
+    "interface": "wlan0",
+    "channel": 8,
+    "bridge": "null",
+    "hw_mode": "g",
+    "wpa": 2,
+    "ssid": "TEST",
+    "wpa_passphrase": "0123456789"
+  }
+}
+```
+
 After success, reboot the device.
 
 ```

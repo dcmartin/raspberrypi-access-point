@@ -272,8 +272,6 @@ setup_device()
   if [ "${bridge:-null}" != 'null' ]; then
     local bridge=$(setup_bridge ${interface} ${bridge})
 
-    echo "... TRACE: ${FUNCNAME[0]}: bridge: ${bridge:-null}" &> /dev/stderr
-
     if [ "${bridge:-null}" != 'null' ]; then
       result='{"date":"'$(date -u +%FT%TZ)'","interface":"'${interface}'","bridge":'"${bridge}"'}'
 
@@ -386,8 +384,6 @@ rpi_bridge()
 
     # setup
     result=$(setup_device ${interface} ${bridge})
-
-    echo "... TRACE: ${FUNCNAME[0]}: result: ${result:-null}" &> /dev/stderr
 
     # reload
     if [ "${result:-null}" != 'null' ]; then
