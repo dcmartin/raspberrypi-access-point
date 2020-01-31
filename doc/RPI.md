@@ -109,21 +109,9 @@ Update and upgrade:
 ssh pi@${IP} 'sudo apt update && sudo apt upgrade -qq -y'
 ```
 
-then install Docker latest release directly from [Docker][docker-com]:
-
 ```
-ssh pi@${IP} 'wget -qO - get.docker.com | sudo bash'
-```
-[docker-com]: https://www.docker.com/get-started
-
 
 ## Step 5
-Install Open Horizon packages
-
-```
-ssh pi@${IP} 'wget -qO - ibm.biz/get-horizon | sudo bash'
-```
-## Step 6
 Once SSH access has been enabled properly, restrictions on access should then be applied.  If SSH has been configured properly, no input or password should be required; check `~/.ssh/known_hosts` for name conflicts).  Login to the device as root:
 
 
@@ -151,6 +139,16 @@ PubkeyAuthentication yes
 UsePAM no
 EOF
 ```
+
+## Step 6 (_optional_)
+
+Install Docker latest release directly from [Docker][docker-com]:
+
+```
+ssh pi@${IP} 'wget -qO - get.docker.com | sudo bash'
+```
+
+[docker-com]: https://www.docker.com/get-started
 
 ## Installation complete
 At this point the device is configured with Docker and Open Horizon and can be registered for a pattern.
