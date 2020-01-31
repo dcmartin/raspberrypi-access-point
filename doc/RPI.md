@@ -109,8 +109,6 @@ Update and upgrade:
 ssh pi@${IP} 'sudo apt update && sudo apt upgrade -qq -y'
 ```
 
-```
-
 ## Step 5
 Once SSH access has been enabled properly, restrictions on access should then be applied.  If SSH has been configured properly, no input or password should be required; check `~/.ssh/known_hosts` for name conflicts).  Login to the device as root:
 
