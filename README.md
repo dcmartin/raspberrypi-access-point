@@ -1,4 +1,4 @@
-# &#9968; `raspberrypi-access-point`
+# 📶 `raspberrypi-access-point`
 
 This [repository][repository] contains documentation and scripts to setup a RaspberryPi as a WiFi access point.
 
