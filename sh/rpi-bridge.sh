@@ -46,7 +46,11 @@ MITM_WEBUI_PORT=8081
 
 start_mitm()
 {
-  docker run --restart=unless-stopped -d -p ${MITM_PROXY_PORT}:${MITM_PROXY_PORT} -p ${MITM_WEBUI_PORT}:${MITM_WEBUI_PORT} mitmproxy/mitmproxy:latest-ARMv7 mitmweb --web-iface 0.0.0.0
+  if [ -z "$(command -v docker)" ]; then
+    echo "Install Docker for man-in-the-middle container execution"
+  else
+    docker run --restart=unless-stopped -d -p ${MITM_PROXY_PORT}:${MITM_PROXY_PORT} -p ${MITM_WEBUI_PORT}:${MITM_WEBUI_PORT} mitmproxy/mitmproxy:latest-ARMv7 mitmweb --web-iface 0.0.0.0
+  fi
 }
 
 setup_iptables()
