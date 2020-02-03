@@ -1,4 +1,4 @@
-# `RPI.md` - Install on Raspberry Pi Model 3B+
+# `RPI.md` - Setup Raspberry Pi Model 3B+
 
 # A. Hardware Required
 
@@ -106,10 +106,10 @@ ssh pi@${IP} "sudo reboot"
 Update and upgrade:
 
 ```shell
-ssh pi@${IP} 'sudo apt update && sudo apt upgrade -qq -y'
+ssh pi@${IP} 'sudo apt update -qq -y && sudo apt upgrade -qq -y'
 ```
 
-## Step 5
+## Step 5 (_optional_; for the security minded)
 Once SSH access has been enabled properly, restrictions on access should then be applied.  If SSH has been configured properly, no input or password should be required; check `~/.ssh/known_hosts` for name conflicts).  Login to the device as root:
 
 
@@ -138,7 +138,7 @@ UsePAM no
 EOF
 ```
 
-## Step 6 (_optional_)
+## Step 6
 
 Install Docker latest release directly from [Docker][docker-com]:
 

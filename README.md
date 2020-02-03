@@ -11,9 +11,13 @@ A corresponding subnet is created for connected devices; by default the subnet i
 + Range `(2-254)`
 + Duration `24h`
 
-TCP/IP version 4 traffic is routed between the primary and subnet.
+**Only TCP/IP version 4** traffic is routed on the host to and from the subnet.
 
 The [MIT Man-in-the-Middle](https://mitmproxy.org/) proxy may be enabled to intercept `HTTP/S` traffic (i.e. ports `80` and `443`).
+
+See [`RPI.md`](doc/RPI.md) to setup a RaspberryPi
+
+When completed, refer to [`HASSIO.md`](doc/HASSIO.md) to optionally install [Home Assistant](http://home-assistant.io)
 
 # 1. Status
 
@@ -122,8 +126,6 @@ sudo reboot
 ```
 
 #  Further Information 
-
-See [`HASSIO.md`](doc/HASSIO.md) for information on installing [Home Assistant](http://home-assistant.io)
 
 # Changelog & Releases
 

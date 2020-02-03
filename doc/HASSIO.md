@@ -1,20 +1,22 @@
 # Home Assistant Installation
 
-This document provides instructions for installation of Home Assistant as a Docker container using the HA control system, aka **HASSIO** identifier and `hassio_supervisor` container).  This method provides the ability to both control the Home Assistant system as well as install additional _addons_ as Docker containers.
+This document provides instructions for installation of [Home Assistant](http://home-assistant.io) (HA).
+
+The HA control system (n.b. **hassio**) provides the ability to both control the HA system as well as install additional _addons_:
+
++ [`motion`](http://github.com/dcmartin/hassio-addons/tree/master/motion/) - AI object detection and classification using [YOLO](https://pjreddie.com/darknet/yolo/) and [`motion-project`](https://motion-project.github.io/) software
 
 For additional information on installing Home Assistant, please refer to the [documentation](https://www.home-assistant.io/hassio/installation/).
 
-<hr>
+# Instructions
 
 ## Step 1
- Download and flash (e.g. using [Balena Etcher](https://www.balena.io/etcher/)) an appropriate operating system for the target device (e.g. [Raspbian Lite](https://www.raspberrypi.org/downloads/raspbian/) for RaspberryPi) and  _don't unmount or eject after flashing_.
 
-Then specify the wireless and enable `ssh` access; for example, using the provided script `sh/add-wpa.sh`:
+Download and flash (e.g. using [Balena Etcher](https://www.balena.io/etcher/)) an appropriate operating system for the target device and configure appropriately.
 
-```
-% NETWORK_SSID=WIFINAME NETWORK_PASSWORD=MyP@S$WoRd ./sh/add-wpa.sh
-```
-When completed, eject the SD card, insert into target device and power-on.
++ [RPI.md](RPI.md) - instructions for the RaspberryPi.
++ [NANO.md](http://github.com/dcmartin/open-horizon/tree/master/doc/NANO.md) - instructions for the nVidia Jetson Nano.
+
 
 ## Step 2
 When the system has completed booting, it will automatically join the indicated wireless network.  To find the device on the network, search for it using the `nmap` program, for example:
@@ -67,10 +69,16 @@ Access the target device using `ssh` and install pre-requisites for Home Assista
 ```
 sudo apt update -qq -y
 sudo apt upgrade -qq -y
-sudo apt install -y software-properties-common apparmor-utils apt-transport-https avahi-daemon ca-certificates curl dbus jq socat network-manager
+sudo apt install -qq -y software-properties-common apparmor-utils apt-transport-https avahi-daemon ca-certificates curl dbus jq socat
 ```
 
-If `network-manager` is installed, disable the MAC address randomization; create the file:
+&#9995; And **optionally**, the `network-manager` (please refer to section on MAC address randomization below).
+
+```
+sudo apt install -qq -y network-manager
+```
+
+&#9994; If `network-manager` is installed, disable the MAC address randomization; create the file:
 
 ```
 /etc/NetworkManager/conf.d/100-disable-wifi-mac-randomization.conf
