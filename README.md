@@ -34,7 +34,7 @@ a WiFi access point.  The access point has the following options:
 + `HW_MODE` - The type of WiFi network; options are `g` and `a` _mode `a` may not work on all devices_; default: `g`
 + `CHANNEL` - The network channel used for the WiFi network; default: `8`
 
-These values may be changed using the LINUX command-line, for example:
+These values may be changed using the _bash_ command-line, for example:
 
 ```
 export SSID="MyNetwork"
@@ -46,9 +46,13 @@ Executing the script configures the WiFi adapter (n.b. `wlan0` by default) to pr
 
 Devices connecting to the WiFi network using the specified `SSID` and `WPA_PASSPHRASE` will be assigned IP addresses on the subnet and have traffic routed from the WiFi network to the Ethernet network.
 
+&#9995; **For example**, from a _bash_ command prompt:
 
 ```
-sudo ./sh/rpi-bridge
+sudo -s
+export SSID="TEST" WPA_PASSPHRASE="0123456789" CHANNEL=8
+./sh/rpi-bridge
+exit
 ```
 
 If the script successfully executes it outputs a JSON structure with the configuration applied; record that information for review.
@@ -98,7 +102,7 @@ Executing: /lib/systemd/systemd-sysv-install enable hostapd
 }
 ```
 
-After success, reboot the device.
+&#9989; After success, reboot the device.
 
 ```
 sudo reboot
