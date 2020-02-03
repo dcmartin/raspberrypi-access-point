@@ -15,23 +15,25 @@ A corresponding subnet is created for connected devices; by default the subnet i
 
 The [MIT Man-in-the-Middle](https://mitmproxy.org/) proxy may be enabled to intercept `HTTP/S` traffic (i.e. ports `80` and `443`).
 
-See [`RPI.md`](doc/RPI.md) to setup a RaspberryPi
+## Further Information
 
-When completed, refer to [`HASSIO.md`](doc/HASSIO.md) to optionally install [Home Assistant](http://home-assistant.io)
++ [`RPI.md`](doc/RPI.md) to setup a RaspberryPi
++ [`HASSIO.md`](doc/HASSIO.md) to optionally install [Home Assistant](http://home-assistant.io)
++ [`uhubctl/README.md`](uhubctl/README.md) to optionally install [`uhubctl`](https://github.com/mvp/uhubctl)
 
-# 1. Status
+# Instructions
 
 [arm64-shield]: https://img.shields.io/badge/aarch64-no-red.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-no-red.svg
 [arm-shield]: https://img.shields.io/badge/armhf-yes-green.svg
 
-## 1. Introduction
+## Introduction
 
-Setting up a RaspberryPi as a WiFi access point is documented in many places, including the [ThePi](https://thepi.io/how-to-use-your-raspberry-pi-as-a-wireless-access-point/) and [official](https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md) specifications.
-
-Your device will require both an Ethernet cable connection as well as WiFi adapter.
+Setting up a RaspberryPi as a WiFi access point is documented in many places, including the [ThePi](https://thepi.io/how-to-use-your-raspberry-pi-as-a-wireless-access-point/) and [official](https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md) specifications.  IMHO the existing instructions were insufficient for successful replication.
 
 ## Requirements
+
+Your device will require both an Ethernet cable connection as well as WiFi adapter.
 
 You will need to install the latest Raspbian Buster release on the RaspberryPi; [documentation](doc/RPI.md) is provided in this repository; other sources include the [official](https://www.raspberrypi.org/documentation/installation/) specification.
 
@@ -124,8 +126,6 @@ Executing: /lib/systemd/systemd-sysv-install enable hostapd
 ```
 sudo reboot
 ```
-
-#  Further Information 
 
 # Changelog & Releases
 
