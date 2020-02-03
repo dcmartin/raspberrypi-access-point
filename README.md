@@ -1,7 +1,19 @@
 
 # &#128246; `raspberrypi-access-point`
 
-This [repository][repository] contains documentation and scripts to setup a RaspberryPi as a WiFi access point.
+This [repository][repository] contains documentation and scripts to setup a RaspberryPi as a WiFi access point, including
+DHCP and DNS services.
+
+A corresponding subnet is created for connected devices; by default the subnet is based on the host IP address.
+
++ Host IP: `192.168.1.93`
++ Subnet `192.168.93.1/24`
++ Range `(2-254)`
++ Duration `24h`
+
+TCP/IP version 4 traffic is routed between the primary and subnet.
+
+The [MIT Man-in-the-Middle](https://mitmproxy.org/) proxy may be enabled to intercept `HTTP/S` traffic (i.e. ports `80` and `443`).
 
 # 1. Status
 
