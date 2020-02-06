@@ -16,6 +16,17 @@ if [ ! -d "${VOLUME_BOOT}" ]; then
   exit 1
 fi
 
+## RPI-UPDATE
+if [ -s "master.tar.gz" ]; then
+  echo "--- INFO $0 $$ -- copying rpi-update (master.tar.gz) to ${VOLUME_BOOT}/rpi-update"
+  mkdir ${VOLUME_BOOT}/rpi-update
+  if [ -d "" ]; then
+    cp "master.tar.gz" ${VOLUME_BOOT}/rpi-update
+  else
+    echo "*** ERROR $0 $$ -- unable to create directory: ${VOLUME_BOOT}/rpi-update; copy skipped
+  fi
+fi
+
 ## WIFI
 
 NETWORK_SSID=${NETWORK_SSID:-}

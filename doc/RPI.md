@@ -4,7 +4,7 @@
 
 1. [RaspberryPi Model 3B+][device]
 1. 16 Gbyte microSD card (32 Gbyte recommended)
-1. Micro-USB 5V 3A [power-supply][power-supply] and cable
+1. Micro-USB 5V 2.4A [power-supply][power-supply] and cable
 1. USB SSD drive (_optional_)
 
 [device]: https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus

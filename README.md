@@ -33,14 +33,36 @@ Setting up a RaspberryPi as a WiFi access point is documented in many places, in
 
 ## Requirements
 
-Your device will require both an Ethernet cable connection as well as WiFi adapter.
+Your device will require both an Ethernet cable connection as well as WiFi adapter.  You will need to install the latest Raspbian Buster release on the RaspberryPi; [documentation](doc/RPI.md) is provided in this repository; other sources include the [official](https://www.raspberrypi.org/documentation/installation/) specification.
 
-You will need to install the latest Raspbian Buster release on the RaspberryPi; [documentation](doc/RPI.md) is provided in this repository; other sources include the [official](https://www.raspberrypi.org/documentation/installation/) specification.
-
+### `rpi-update`
 Depending on the age of the device you may need to update; for example:
 
 ```
-rpi-update
+sudo rpi-update
+```
+
+To avoid failures when attempting to update, include the update on the flashed SD card; for example:
+
+```
+curl -sSL https://github.com/Hexxeh/rpi-firmware/archive/master.tar.gz -o master.tar.gz
+cp master.tar.gz /Volumes/boot
+```
+
+After the machine has booted, use `sudo -s` to become root and
+
++ make the directory
++ move the included archive
++ unpack the archive
++  run `rpi-update`; skipping the download
+
+For example:
+
+```
+mkdir -p /root/.rpi-firmware
+mv /master.tar.gz /root/.rpi-firmware
+cd /root/.rpi-firmware && tar xvzf /root/master.tar.gz
+SKIP_DOWNLOAD=1 rpi-update
 ```
 
 ## Use
