@@ -33,20 +33,22 @@ Setting up a RaspberryPi as a WiFi access point is documented in many places, in
 
 ## Requirements
 
-Your device will require both an Ethernet cable connection as well as WiFi adapter.  You will need to install the latest Raspbian Buster release on the RaspberryPi; [documentation](doc/RPI.md) is provided in this repository; other sources include the [official](https://www.raspberrypi.org/documentation/installation/) specification.
+Your device will require both an Ethernet cable connection as well as WiFi adapter.  You will need to install the latest Raspbian Buster release; [documentation](doc/RPI.md) is provided in this repository.
 
-### `rpi-update`
-Depending on the age of the device you may need to update; for example:
+Other sources include the [official](https://www.raspberrypi.org/documentation/installation/) specification.
+
+### &#9937;`rpi-update`
+Depending on the age of the device you may need to update the firmware.  The `rpi-update` program will update the firmware for your RaspberryPi; for example:
 
 ```
 sudo rpi-update
 ```
 
-To avoid failures when attempting to update, include the update on the flashed SD card; for example:
+The download is often large (e.g. > 100 MB) and sometimes fails; to avoid failures when attempting to update, include the update on the flashed SD card prior to installation in the device (see [RPI.md](doc/RPI.md)); for example:
 
 ```
 curl -sSL https://github.com/Hexxeh/rpi-firmware/archive/master.tar.gz -o master.tar.gz
-cp master.tar.gz /Volumes/boot
+sudo cp master.tar.gz /Volumes/boot
 ```
 
 After the machine has booted, use `sudo -s` to become root and
@@ -54,15 +56,25 @@ After the machine has booted, use `sudo -s` to become root and
 + make the directory
 + move the included archive
 + unpack the archive
-+  run `rpi-update`; skipping the download
++  run `rpi-update`-- skipping the download
++  `reboot` the device
 
 For example:
 
 ```
+sudo -s
 mkdir -p /root/.rpi-firmware
-mv /master.tar.gz /root/.rpi-firmware
-cd /root/.rpi-firmware && tar xvzf /root/master.tar.gz
+cd /root/.rpi-firmware
+tar xzf /master.tar.gz .
 SKIP_DOWNLOAD=1 rpi-update
+reboot
+```
+When `rpi-update` is complete, reboot the device and update the system again; invariably the device will require another `reboot` command; for example:
+
+```
+sudo apt update -qq -y
+sudo apt upgrade -qq -y
+sudo reboot
 ```
 
 ## Use
