@@ -1,14 +1,20 @@
 #!/bin/bash
 
+if [ "${USER:-null}" != 'root' ]; then
+  echo "Please run as root; sudo ${0} ${*}" &> /dev/stderr
+  exit 1
+fi
+
 if [ -z "$(command -v nmap)" ]; then
   echo "Please install nmap; sudo apt install -qq -y nmap" &> /dev/stderr
   exit 1
 fi
 
-if [ "${USER:-null}" != 'root' ]; then
-  echo "Please run as root; sudo ${0} ${*}" &> /dev/stderr
+if [ -z "$(command -v ip)" ]; then
+  echo "No ip command found; brew install iproute2mac" &> /dev/stderr
   exit 1
 fi
+
 
 CURL_CONNECT_TIME=5
 CURL_MAX_TIME=20
@@ -25,7 +31,7 @@ else
       wnet=${eth0%.*}.0/24
       wlan=${eth0}
     else
-      echo "Could not identify a network to scan; please specify: ${0} 192.168.1.0" &> /dev/stderr
+      echo "Could not identify a network to scan; please specify: sudo ${0} 192.168.1.0" &> /dev/stderr
       exit 1
     fi
   fi
