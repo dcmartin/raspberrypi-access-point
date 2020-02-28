@@ -8,7 +8,7 @@ A corresponding subnet is created for connected devices; by default the subnet i
 
 + Host IP: `192.168.1.93`
 + Subnet `192.168.93.1/24`
-+ Range `(2-254)`
++ Range `(1-3)`
 + Duration `24h`
 
 **Only TCP/IP version 4** traffic is routed on the host to and from the subnet.
@@ -155,11 +155,31 @@ Executing: /lib/systemd/systemd-sysv-install enable hostapd
 sudo reboot
 ```
 
+# Finding `RTSP` cameras
+
 To find **RTSP** camera(s) attached to the WiFi access point, use the [sh/find-rtsp.sh](sh/find-rtsp.sh) 
 shell script to find devices on the subnet and attempt `RTSP` connections; for example:
 
 ```
+./sh/find-rtsp.sh
 ```
+
+# Further information
+The WiFi network and TCP/IP subnetwork may be used in conjunction with other systems.  Please see below for further information.
+
+## [Home Assistant](http://home-assistant.io) `motion` _add-on_
+For devices running Home Assistant and the [`motion`](http://github.com/dcmartin/motion) _add-on_, when using WiFi as the primary network, the configuration is completed by generating a **QR code** which is displayed to the device's camera to provide setup information.  The QR code may be generated [on-line](https://zxing.appspot.com/generator) using the provided `Wifi network` template.
+
+For testing purposes, using the WiFi `SSID=TEST` and the `WPA_PASSPHRASE=0123456789` the following QR code may be used:
+
+<img width="50%" src="doc/samples/wifi-TEST-0123456789.png">
+
+## WyzeCam `RTSP` cameras
+For WyzeCam devices whether being used as an `RTSP` [source](https://support.wyzecam.com/hc/en-us/articles/360026245231-Wyze-Cam-RTSP) by the [`motion`](http://github.com/dcmartin/motion) _add-on_ or not,  the configuration is completed by connecting a mobile device (e.g. iOS or Android) to the RaspberryPi provided WiFi SSID (and TCP/IP subnet) and running the Wyze application to add a device.  The application generates a **QR code** which is then displayed to the camera to provide setup information.
+
+For testing purposes, using the WiFi `SSID=TEST` and the `WPA_PASSPHRASE=0123456789` the following QR code may be used:
+
+<img width="50%" src="doc/samples/wyze-TEST-0123456789.png">
 
 # Changelog & Releases
 
