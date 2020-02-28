@@ -21,12 +21,6 @@ The [MIT Man-in-the-Middle](https://mitmproxy.org/) proxy may be enabled to inte
 + [`HASSIO.md`](doc/HASSIO.md) to optionally install [Home Assistant](http://home-assistant.io)
 + [`uhubctl/README.md`](uhubctl/README.md) to optionally install [`uhubctl`](https://github.com/mvp/uhubctl)
 
-# Instructions
-
-[arm64-shield]: https://img.shields.io/badge/aarch64-no-red.svg
-[amd64-shield]: https://img.shields.io/badge/amd64-no-red.svg
-[arm-shield]: https://img.shields.io/badge/armhf-yes-green.svg
-
 ## Introduction
 
 Setting up a RaspberryPi as a WiFi access point is documented in many places, including the [ThePi](https://thepi.io/how-to-use-your-raspberry-pi-as-a-wireless-access-point/) and [official](https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md) specifications.  IMHO the existing instructions were insufficient for successful replication.
@@ -73,7 +67,7 @@ When `rpi-update` is complete, reboot the device and update the system again; in
 
 ```
 sudo apt update -qq -y
-sudo apt upgrade -qq -y
+sudo apt full-upgrade -qq -y
 sudo reboot
 ```
 
@@ -159,6 +153,12 @@ Executing: /lib/systemd/systemd-sysv-install enable hostapd
 
 ```
 sudo reboot
+```
+
+To find **RTSP** camera(s) attached to the WiFi access point, use the [sh/find-rtsp.sh](sh/find-rtsp.sh) 
+shell script to find devices on the subnet and attempt `RTSP` connections; for example:
+
+```
 ```
 
 # Changelog & Releases
