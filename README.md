@@ -161,7 +161,7 @@ To find **RTSP** camera(s) attached to the WiFi access point, use the [sh/find-r
 shell script to find devices on the subnet and attempt `RTSP` connections; for example:
 
 ```
-./sh/find-rtsp.sh
+sudo ./sh/find-rtsp.sh
 ```
 
 # Further information
