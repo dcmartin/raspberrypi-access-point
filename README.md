@@ -15,6 +15,10 @@ A corresponding subnet is created for connected devices; by default the subnet i
 
 The [MIT Man-in-the-Middle](https://mitmproxy.org/) proxy may be enabled to intercept `HTTP/S` traffic (i.e. ports `80` and `443`).
 
+## Example
+
+<img width="50%" src="doc/example.png">
+
 ## Further Information
 
 + [`RPI.md`](doc/RPI.md) to setup a RaspberryPi
