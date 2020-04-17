@@ -109,6 +109,13 @@ setup_iptables()
   echo "${result:-null}"
 }
 
+teardown_iptables()
+{
+  systemctl stop iptables
+  systemctl disable iptables
+  systemctl mask iptables
+  rm -f ${IPTABLES_SCRIPT}
+}
 
 ###
 # DNSMASQ
@@ -161,6 +168,25 @@ setup_dnsmasq()
   echo "${result:-null}"
 }
 
+teardown_dnsmasq()
+{
+  if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
+
+  local interface="${1:-wlan0}"
+  local dnsmasq_conf="${2:-${DNSMASQ_CONF}}"
+  local dhcp_conf="${3:-${DHCP_CONF}}"
+  local dhcp=$(teardown_dhcp ${interface} ${dhcp_conf})
+
+  systemctl stop dhcpcd &> /dev/stderr
+  systemctl disable dhcpcd &> /dev/stderr
+  systemctl mask dhcpcd &> /dev/stderr
+  systemctl stop dnsmasq &> /dev/stderr
+  systemctl disable dnsmasq &> /dev/stderr
+  systemctl mask dnsmasq &> /dev/stderr
+
+  rm -f ${dnsmasq_conf}
+}
+
 ###
 # BRIDGE
 ###
@@ -172,10 +198,10 @@ setup_bridge()
   local interface="${1:-wlan0}"; shift
   local bridge=${1:-br0}; shift
   local dns_nameservers="${*:-${DNS_NAMESERVERS}}"
+  local result
 
   if [ $(brctl show | egrep "${bridge}" | wc -l) -le 1 ]; then
     brctl addbr ${bridge}
-    #brctl addif ${bridge} eth0
   else
     echo "+++ WARN $0 $$ -- existing bridge ${bridge}; not making" &> /dev/stderr
   fi
@@ -195,6 +221,34 @@ setup_bridge()
   echo "dns-nameservers ${dns_nameservers}" >> ${NETWORK_CONF}
 
   # report
+  result='{"name":"'${bridge}'","interface":"'${interface}'","dns_nameservers":"'${dns_nameservers}'"}'
+
+  echo "${result:-null}"
+}
+
+teardown_bridge()
+{
+  if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
+
+  local interface="${1:-wlan0}"; shift
+  local bridge=${1:-br0}; shift
+  local result
+
+  if [ $(brctl show | egrep "${bridge}" | wc -l) -ge 0 ]; then
+    brctl delbr ${bridge}
+  else
+    echo "+++ WARN $0 $$ -- no existing bridge ${bridge}; not deleting" &> /dev/stderr
+  fi
+  if [ -s "${NETWORK_CONF}" ]; then
+    cp ${NETWORK_CONF} ${NETWORK_CONF}.bak
+    sed -e "s/^auto ${bridge}//" -i ${NETWORK_CONF}
+    sed -e "s/^iface ${bridge} inet manual"// -i ${NETWORK_CONF}
+    sed -e "s/^bridge_ports eth0 ${interface}"// -i ${NETWORK_CONF}
+    sed -e "s/^dns-nameservers ${dns_nameservers}//" -i ${NETWORK_CONF}
+  else
+    echo "+++ WARN $0 $$ -- no ${NETWORK_CONF}; specify manually" &> /dev/stderr
+  fi
+
   result='{"name":"'${bridge}'","interface":"'${interface}'","dns_nameservers":"'${dns_nameservers}'"}'
 
   echo "${result:-null}"
@@ -250,6 +304,16 @@ setup_hostapd()
   echo "${result:-null}"
 }
 
+teardown_hostapd()
+{
+  if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
+
+  systemctl stop hostapd
+  systemctl disable hostapd
+  systemctl mask hostapd
+  rm -f ${HOSTAPD_CONF}
+}
+
 ###
 ## /etc/sysctl.conf
 ###
@@ -260,6 +324,14 @@ enable_ipv4_forward()
 
   sed -i 's|.*net.ipv4.ip_forward.*|net.ipv4.ip_forward=1|' "${SYSCTL_CONF}"
   echo 1 > /proc/sys/net/ipv4/ip_forward
+}
+
+disable_ipv4_forward()
+{
+  if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
+
+  sed -i 's|.*net.ipv4.ip_forward.*|net.ipv4.ip_forward=0|' "${SYSCTL_CONF}"
+  echo 0 > /proc/sys/net/ipv4/ip_forward
 }
 
 ## build a bridge
@@ -311,6 +383,23 @@ setup_device()
   echo "${result:-null}"
 }
 
+teardown_device()
+{
+  if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
+
+  local interface="${1:-wlan0}"
+  local bridge="${2:-null}"
+  local result 
+
+  disable_ipv4_forward
+  teardown_iptables
+  teardown_dnsmasq
+  teardown_bridge
+
+  echo "${result:-null}"
+}
+
+## check for required software
 package_check()
 {
   if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
@@ -367,7 +456,7 @@ required_packages()
 }
 
 ## build the bridge
-rpi_bridge()
+rpi_setup()
 {
   if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
 
@@ -398,6 +487,20 @@ rpi_bridge()
       echo "*** ERROR $0 $$ -- device setup failed" &> /dev/stderr
     fi
   fi
+  echo "${result:-null}"
+}
+
+rpi_teardown()
+{
+  if [ "${DEBUG:-false}" = 'true' ]; then echo "--- FUNCTION: ${FUNCNAME[0]} ${*}" &> /dev/stderr; fi
+
+  local result
+  local bridge=${1:-null}
+  local interface=${2:-wlan0}
+
+  # setup
+  result=$(teardown_device ${interface} ${bridge})
+
   echo "${result:-null}"
 }
 
@@ -445,4 +548,11 @@ IPTABLES_SCRIPT="/etc/iptables.sh"
 IPTABLES_SERVICE="/etc/systemd/system/iptables.service"
 
 # doit
-rpi_bridge ${*} | jq '.'
+if [ ${0##*/} = 'rpi-setup.sh' ]; then
+  rpi_setup ${*} | jq '.'
+elif [ ${0##*/} = 'rpi-teardown.sh' ]; then
+  rpi_teardown ${*} | jq '.'
+else
+  echo 'Please run as either "rpi-setup.sh" or "rpi-teardown.sh"' &> /dev/stderr
+  exit 1
+fi
